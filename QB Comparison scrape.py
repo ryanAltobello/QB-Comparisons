@@ -35,7 +35,10 @@ for row in rows:
 
         for players in player:
             qb_name = players.get("title")
-            print(qb_name)
+            PFR_url = "https://www.pro-football-reference.com/players/" + qb_name[qb_name.find(" ") + 1] + "/" + qb_name[qb_name.find(" ") + 1:qb_name.find(" ") + 5] + qb_name[0:2] + "00.htm"
+            qb_name_2 = qb_name[qb_name.find(" ") + 1]
+            print(PFR_url)
+            
 
 
 

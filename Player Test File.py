@@ -17,20 +17,20 @@ passing_footer = passing_table.find("tfoot")
 career_row = passing_footer.find("tr")
 stats = career_row.find_all("td", {"class": "right"})
 
-filename = "qb_stats.csv"
-f = open(filename, "a")
-f.write("\n")
-f.write(player_name)
+# filename = "qb_stats.csv"
+# f = open(filename, "a")
+# f.write("\n")
+# f.write(player_name)
 
-f.write(",")
+# f.write(",")
 
 for stat in stats:
     if(stat.text != ""):
         print(stat.text, end=" ")
-        f.write(stat.text + ",")
+#         f.write(stat.text + ",")
 
-f.write("\n")
-f.write(",")
+# f.write("\n")
+# f.write(",")
 
 playoff_table = page_soup.find("div", {"id": "all_passing_playoffs"})
 if playoff_table is not None:
@@ -43,7 +43,7 @@ if playoff_table is not None:
 
     for stat2 in stats2:
         print(stat2.text, end=" ")
-        f.write(stat2.text + ",")
+    #     f.write(stat2.text + ",")
 
-    f.write("\n")
-    f.close()
+    # f.write("\n")
+    # f.close()

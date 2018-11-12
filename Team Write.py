@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup, Comment
 
 soup = BeautifulSoup
 
-team_url = uReq("https://en.wikipedia.org/wiki/List_of_New_Orleans_Saints_starting_quarterbacks")
+team_url = uReq("https://en.wikipedia.org/wiki/List_of_Arizona_Cardinals_starting_quarterbacks")
 page_html2 = team_url.read()
 team_url.close()
 page_soup2 = soup(page_html2, "html.parser")
@@ -17,7 +17,7 @@ for tables in player_table:
         if player_table_year is not None:
             find_player_name = player_table_year.parent.parent
             player_name = find_player_name.select_one("td:nth-of-type(2)")
-            player = player_name.findAll("a")
+            player = player_name.find_all("a")
             for qbs in player:
                 qb_name = qbs.get("title")
                 PFR_url = "https://www.pro-football-reference.com/players/" + qb_name[qb_name.find(" ") + 1] + "/" + qb_name[qb_name.find(" ") + 1:qb_name.find(" ") + 5] + qb_name[0:2] + "00.htm"
@@ -37,19 +37,19 @@ for tables in player_table:
                 career_row = passing_footer.find("tr")
                 stats = career_row.find_all("td", {"class": "right"})
 
-                # filename = "qb_stats.csv"
-                # f = open(filename, "a")
-                # f.write("\n")
-                # f.write(player_name)
-                # f.write(",")
+                filename = "qb_stats.sik"
+                f = open(filename, "a")
+                f.write("\n")
+                f.write(player_name)
+                f.write(",")
 
                 for stat in stats:
                     if(stat.text != ""):
                         print(stat.text, end=" ")
-                        # f.write(stat.text + ",")
+                        f.write(stat.text + ",")
                 
-                # f.write("\n")
-                # f.write(",")
+                f.write("\n")
+                f.write(",")
 
                 playoff_table = page_soup3.find("div", {"id": "all_passing_playoffs"})
                 if playoff_table is not None:
@@ -61,8 +61,9 @@ for tables in player_table:
 
                     for stat2 in stats2:
                         print(stat2.text, end=" ")
-                        # f.write(stat2.text + ",")
+                        f.write(stat2.text + ",")
 
                     print("\n")
-                    # f.write("\n")
-                    # f.close()
+                    f.write("\n")
+                                        
+f.close()

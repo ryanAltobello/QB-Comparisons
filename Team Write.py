@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup, Comment
 
 soup = BeautifulSoup
 
-team_url = uReq("https://en.wikipedia.org/wiki/List_of_Arizona_Cardinals_starting_quarterbacks")
+team_url = uReq("https://en.wikipedia.org/wiki/List_of_Buffalo_Bills_starting_quarterbacks")
 page_html2 = team_url.read()
 team_url.close()
 page_soup2 = soup(page_html2, "html.parser")
@@ -25,22 +25,29 @@ for tables in player_table:
                 
                 print(PFR_url)
 
-                qb_url = uReq(PFR_url)
-                page_html3 = qb_url.read()
-                qb_url.close()
-                page_soup3 = soup(page_html3, "html.parser")
+                try:
+                    qb_url = uReq(PFR_url)
+                    page_html3 = qb_url.read()
+                    qb_url.close()
+                    page_soup3 = soup(page_html3, "html.parser")
+                    player_name = page_soup3.find("h1", attrs={"itemprop": "name"}).text
 
-                player_name = page_soup3.find("h1", attrs={"itemprop": "name"}).text
+                    passing_table = page_soup3.find("table", {"id": "passing"}).tfoot.tr
+                    stats = passing_table.find_all("td", {"class": "right"})
 
-                passing_table = page_soup3.find("table", {"id": "passing"})
-                passing_footer = passing_table.find("tfoot")
-                career_row = passing_footer.find("tr")
-                stats = career_row.find_all("td", {"class": "right"})
+                    college = page_soup.find("strong", text="College").parent.a.text
+                    birthplace = page_soup.find("span", attrs={"itemprop": "birthPlace"}).a.text
+                    nfl_year = int(page_soup.find("table", {"id": "passing"}).tbody.tr.th.a.text)
+                    college_year = str(nfl_year - 1)
+
+                except Exception as e:
+                    print(e)
+                    continue
 
                 filename = "qb_stats.sik"
                 f = open(filename, "a")
                 f.write("\n")
-                f.write(player_name)
+                f.write(player_name + "," + birthplace + "," + college + "," + college_year + ",")
                 f.write(",")
 
                 for stat in stats:
@@ -55,9 +62,8 @@ for tables in player_table:
                 if playoff_table is not None:
                     comment = playoff_table.find(text=lambda html_comment: isinstance(html_comment, Comment))
                     newsoup = soup(comment, "html.parser")
-                    playoff_footer = newsoup.find("tfoot")
-                    career_row2 = playoff_footer.find("tr")
-                    stats2 = career_row2.find_all("td", {"class": "right"})
+                    playoff_footer = newsoup.find("tfoot").tr
+                    stats2 = playoff_footer.find_all("td", {"class": "right"})
 
                     for stat2 in stats2:
                         print(stat2.text, end=" ")
